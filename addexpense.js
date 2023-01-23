@@ -19,6 +19,13 @@ function saveExpense(event){
     )
     .catch(err=>console.log(err))
 }
+function limitRows(event){
+    //console.log(event)
+    const row=document.getElementById('rows').value
+    console.log(row)
+    //window.location.reload()
+    localStorage.setItem('rows',row)
+}
 window.addEventListener('DOMContentLoaded',()=>{
     // const token=localStorage.getItem('token')
     // axios.get("http://localhost:4000/expense/getExpense",{headers:{'Authorization':token}})
@@ -34,15 +41,18 @@ window.addEventListener('DOMContentLoaded',()=>{
         
     // }})
     // .catch(err=>console.log(err))
-    
+    // const row=document.getElementById('rows').value
+    // console.log(row)
+    const rows=localStorage.getItem('rows')
+    console.log('rows',rows)
     let page=1;
-    getProducts(page)
+    getProducts(page,rows)
 })
 
-async function getProducts(page){
+async function getProducts(page,rows){
     //console.log(page)
     const token=localStorage.getItem('token')
-    await axios.get(`http://localhost:4000/expense/getExpense?page=${page}`,{headers:{'Authorization':token}})
+    await axios.get(`http://localhost:4000/expense/getExpense?page=${page}&rows=${rows}`,{headers:{'Authorization':token}})
     .then((response)=>{
         
         showUserOnScreen(response)

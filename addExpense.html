@@ -16,6 +16,14 @@
         <input id="category" name="category" type="text" required/>
         <button id="addExpense">Add Expense</button>
         <button id="showTable" onclick="downloadFile(event)">Download file</button>
+        <select name="rows" id="rows" onchange="limitRows(event)">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="25">25</option>
+            <option value="20">50</option>
+          </select>
     </form><br>
     </form>
     <button id="premium">Buy Premium</button>

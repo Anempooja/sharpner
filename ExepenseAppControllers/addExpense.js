@@ -1,7 +1,5 @@
 const Expense=require('../ExpenseAppModels/expense');
-const AWS=require('aws-sdk')
 
-const limit=10;
 
  const UserServices=require('../ExpenseServices/userServices')
  const s3Services=require('../ExpenseServices/s3Services')

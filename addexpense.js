@@ -20,28 +20,101 @@ function saveExpense(event){
     .catch(err=>console.log(err))
 }
 window.addEventListener('DOMContentLoaded',()=>{
-    const token=localStorage.getItem('token')
-    axios.get("http://localhost:4000/expense/getExpense",{headers:{'Authorization':token}})
-    .then(response=>{
-        console.log(response.user)
-        if(response.user.ispremiumuser){
-            x()
-        }
+    // const token=localStorage.getItem('token')
+    // axios.get("http://localhost:4000/expense/getExpense",{headers:{'Authorization':token}})
+    // .then(response=>{
+    //     console.log(response.user)
+    //     if(response.user.ispremiumuser){
+    //         x()
+    //     }
         
-            for(var i=0;i<response.Expenses.length;i++){
-            showUserOnScreen(response.Expenses[i])
+    //         for(var i=0;i<response.Expenses.length;i++){
+    //         showUserOnScreen(response.Expenses[i])
         
         
-    }})
-    .catch(err=>console.log(err))
+    // }})
+    // .catch(err=>console.log(err))
+    
+    let page=1;
+    getProducts(page)
 })
+
+async function getProducts(page){
+    //console.log(page)
+    const token=localStorage.getItem('token')
+    await axios.get(`http://localhost:4000/expense/getExpense?page=${page}`,{headers:{'Authorization':token}})
+    .then((response)=>{
+        
+        showUserOnScreen(response)
+        showPagination(response.data)
+    })
+}
+function showPagination(pageDetails){
+    
+    const pagination = document.getElementById("pagination");
+    pagination.innerHTML = "";
+    console.log(pageDetails)
+
+    if (pageDetails.hasPreviousPage) {
+      const button1 = document.createElement("button");
+      button1.innerHTML = pageDetails.previousPage;
+      button1.addEventListener(
+        "click",
+        async () =>
+          await getProducts(pageDetails.previousPage).then((res) => {
+            console.log(res);
+          })
+      );
+      pagination.appendChild(button1);
+    }
+  
+    const button2 = document.createElement("button");
+    button2.classList.add("current");
+    button2.innerText = pageDetails.currentPage
+    
+
+    button2.addEventListener(
+      "click",
+      async () =>
+        await getProducts(pageDetails.currentPage).then((res) => {
+          console.log(res);
+        })
+    );
+    pagination.appendChild(button2);
+    if (pageDetails.hasNextPage) {
+      const button3 = document.createElement("button");
+      button3.innerText = pageDetails.nextPage;
+      button3.addEventListener("click", async () => {
+        
+        await getProducts(pageDetails.nextPage).then((result) => {
+          console.log(result);
+        });
+      });
+      pagination.appendChild(button3);
+    }
+  
+    if (pageDetails.currentPage != pageDetails.lastPage && (pageDetails.currentPage+1)!=pageDetails.lastPage) {
+      const button4 = document.createElement("button");
+      button4.innerText = pageDetails.lastPage;
+      button4.addEventListener(
+        "click",
+        async () =>
+          await getProducts(pageDetails.lastPage).then((res) => {
+            console.log(res);
+          })
+      );
+      pagination.appendChild(button4);
+    }
+  }
+
+
 document.getElementById('premium').onclick=async function(e){
     try{
     
     const token=localStorage.getItem('token')
     const response=await axios.get("http://localhost:4000/purchase/membership",{headers:{'Authorization':token}})
     
-    console.log(response)
+    
     var options={
         'key_id':response.key_id,
         'order_id':response.order.id,
@@ -68,22 +141,26 @@ document.getElementById('premium').onclick=async function(e){
     }
 
 }
-function showUserOnScreen(user){
-    console.log('showscreen',user.id,user.amount,user.description,user.category)
-    const parentNode=document.getElementById('listOfExpenses')
-    const childHTML=`<li id=${user.id}> ${user.amount}-${user.description}-${user.category}
-        <button onclick="deleteUser('${user.id}')">DeleteUser</button>
-        <button onclick="editUser('${user.id}','${user.amount}','${user.description}','${user.category}')">editUser</button>
+function showUserOnScreen(data){
+    var parentNode = document.getElementById("addExpenses");
+  var datas = document.createElement("div");
+  datas.innerText = "Expenses";
+  data.expenses.forEach((data) => {
+   
+    const childHTML=`<li id=${data.id}> ${data.amount}-${data.description}-${data.category}
+        <button onclick="deleteUser('${data.id}')">DeleteExpense</button>
+        <button oncick="editUser('${data.id}','${data.amount}','${data.description}','${data.category}')">Edit Expense</button>
         </li>`
-        console.log('deleted',childHTML)
-        parentNode.innerHTML=parentNode.innerHTML+childHTML
+        datas.innerHTML += childHTML})
+        parentNode.innerHTML = datas.innerHTML;
+        
         document.getElementById('amount').value=''
         document.getElementById('description').value=''
         document.getElementById('category').value=''
         
 }
 function editUser(id,amount,description,category){
-    console.log('edit')
+    
 document.getElementById('amount').value=amount
 document.getElementById('description').value=description
 document.getElementById('category').value=category
@@ -126,11 +203,11 @@ btn.value = "leader Board";
 btn.onclick=async()=>{
     const token=localStorage.getItem('token')
     const leaderBoard= await axios.get("http://localhost:4000/purchase/leaderboard",{headers:{'Authorization':token}})
-    console.log(leaderBoard)
+    
     
 
     leaderBoard.forEach((y)=>{
-        console.log(y)
+        
         const parent =document.getElementById('leaderBoardEle')
         const childHTML=`<li>name:${y.name}-total cost:${y.total_cost}</li>`
         parent.innerHTML=parent.innerHTML+childHTML
@@ -138,12 +215,7 @@ btn.onclick=async()=>{
 
 }
 
-document.getElementById('leaderboard').appendChild(btn)
-// const shownTable=document.createElement('input')
-// shownTable.type='button'
-// shownTable.value='show table'
-// document.getElementById('leaderboard').appendChild(shownTable)
-// shownTable.onclick=async()=>{window.location.href='./expenditureTable.html'}
+
         }
     catch(err){
         console.log(err)
@@ -155,7 +227,7 @@ async function downloadFile(event){
     const token=localStorage.getItem('token')
     await axios.get("http://localhost:4000/expense/download",{headers:{'Authorization':token}})
     .then((response)=>{
-        console.log(response)
+        
         if(response.success){
             var a=document.createElement("a")
             a.href=response.fileURL;

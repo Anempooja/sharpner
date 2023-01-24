@@ -1,5 +1,7 @@
 const Expense=require('../ExpenseAppModels/expense');
+const AWS=require('aws-sdk')
 
+var limit_items=5
 
  const UserServices=require('../ExpenseServices/userServices')
  const s3Services=require('../ExpenseServices/s3Services')
@@ -39,13 +41,15 @@ const download=async(req,res)=>{
 }
 const getExpense=async(req,res,next)=>{
     try{
+        //var limit_items=req.query.rows
+        console.log(req.query.rows)
         const page=req.query.page
         console.log(page)
         const totalExpenses=await Expense.count({where:{userId:req.user.id}})
         console.log(totalExpenses)
         const expenses=await req.user.getExpenses({
-            offset: (page - 1) * limit,
-            limit: limit
+            offset: (page - 1) *limit_items,
+            limit: limit_items
         })
         
         res.status(200).json({
@@ -53,11 +57,11 @@ const getExpense=async(req,res,next)=>{
             success: true,
             data: {
               currentPage: +page,
-              hasNextPage: totalExpenses > page * limit,
+              hasNextPage: totalExpenses > page * limit_items,
               hasPreviousPage: page > 1,
               nextPage: +page + 1,
               previousPage: +page - 1,
-              lastPage: Math.ceil(totalExpenses / limit),
+              lastPage: Math.ceil(totalExpenses / limit_items),
             },
           });
         // const expenses=await Expense.findAll({where:{userId:req.user.id}})

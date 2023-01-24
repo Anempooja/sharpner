@@ -1,0 +1,9 @@
+{
+    "env":{
+        "RAZORPAY_KEY":"rzp_test_OxhDm2VTfxDUvo",
+        "RAZORPAY_SECRET_KEY":"vx5pH7dvs18UIclNMprnGCn9",
+        "JWT_SECRET_KEY":"poojasecretkey",
+        "process.env.PORT":"4000"
+    
+    }
+}

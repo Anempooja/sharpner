@@ -14,7 +14,7 @@ function saveExpense(event){
     .then(response=>{
         console.log(response.expense)
         
-        showUserOnScreen(response.expense);}
+        showUserOnScreen(response);}
         
     )
     .catch(err=>console.log(err))
@@ -167,6 +167,7 @@ function showUserOnScreen(data){
         document.getElementById('amount').value=''
         document.getElementById('description').value=''
         document.getElementById('category').value=''
+        addDownloadedFiles(data.id);
         
 }
 function editUser(id,amount,description,category){
@@ -202,8 +203,8 @@ parent.removeChild(childToBeRemoved)
 }
 function x(){try{
 
-const deletebtn=document.getElementById('premium')
-deletebtn.remove()    
+const removePremiumBtn=document.getElementById('premium')
+removePremiumBtn.remove()    
 const parent=document.getElementById('leaderboard')
 parent.innerHTML=`You are a premium user`
 const btn = document.createElement("input");
@@ -253,4 +254,16 @@ catch(err)
 {
     console.log(err)
 }
+}
+const addDownloadDFiles = document.getElementById("addDownloadedFiles");
+async function addDownloadedFiles(userId) {
+    const token=localStorage.getItem('token')
+  const response = await axios.get(
+    "http://localhost:4000/expense/download",
+    {
+      headers: { Authorization: token },
+    }
+  );
+  console.log(response.date);
+  addDownloadDFiles.innerHTML += `<a href="${response.fileURL}">Expenses${response.date}</a>`;
 }

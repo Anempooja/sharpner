@@ -6,17 +6,17 @@ const Order=require('../ExpenseAppModels/orders')
 const dotenv=require('dotenv')
 const User = require('../ExpenseAppModels/user')
 const Expense = require('../ExpenseAppModels/expense')
-const e = require('cors')
+
 const sequilize = require('../ExpenseAppUtil/database')
 dotenv.config()
 exports.membership=async(req,res,next)=>{
     try{
         
         var rzp= new Razorpay({
-            key_id: process.env.RAZORPAY_KEY,
-            key_secret: process.env.RAZORPAY_SECRET_KEY
+            key_id: "rzp_test_rdslJ4cskIcoyn",
+            key_secret: "nlIaC7MMMgjKSYoLqAF7VcNM"
         })
-       
+       //console.log(process.env.RAZORPAY_KEY,process.env.RAZORPAY_SECRET_KEY)
         const amount=25000;
         await rzp.orders.create({amount,currency:'INR'},(err,order)=>{
             if(err){

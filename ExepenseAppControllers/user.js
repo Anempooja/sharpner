@@ -3,7 +3,7 @@ const User=require('../ExpenseAppModels/user');
 const bcrypt=require('bcrypt')
 const jwt=require('jsonwebtoken')
 function getAccessToken(id){
-    return jwt.sign({userId:id},process.env.JWT_SECRET_KEY)
+    return jwt.sign({userId:id},'poojasecretkey')
 }
 
 exports.signUp= async(req, res, next) => {

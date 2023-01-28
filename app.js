@@ -1,13 +1,13 @@
 const path = require('path');
 const fs=require('fs')
 const express = require('express');
-//const dotenv=require('dotenv')
+const dotenv=require('dotenv')
 
 const bodyParser = require('body-parser');
-const helmet=require('helmet')
+//const helmet=require('helmet')
 
-const accessLogStream=fs.createWriteStream(path.join(__dirname,'accessLog'),{flags:'a'})
-const morgan=require('morgan')
+//const accessLogStream=fs.createWriteStream(path.join(__dirname,'accessLog'),{flags:'a'})
+//const morgan=require('morgan')
 
 var cors = require('cors')
 const Expense=require('./ExpenseAppModels/expense')
@@ -34,15 +34,20 @@ User.hasMany(forgotPasswordRequests)
 forgotPasswordRequests.belongsTo(User)
 
 const app = express();
-//dotenv.config()
-app.use(helmet())
-app.use(morgan('combined',{stream:accessLogStream}))
+dotenv.config()
+//app.use(helmet())
+//app.use(morgan('combined',{stream:accessLogStream}))
 app.use(cors())
 app.use(bodyParser.json());
 app.use('/user',userRoutes)
 app.use('/expense',expenseRoutes)
 app.use('/purchase',purchaseRoutes)
 app.use('/forgotPassword',forgotPasswordRoutes)
+
+
+// app.use ((req,res)=>{
+//     res.sendFile(path.join(__dirname,`public/${req.url}`))
+// })
 sequelize.sync()
 .then(()=>{
     app.listen(process.env.PORT|| 4000)

@@ -45,11 +45,11 @@ app.use('/purchase',purchaseRoutes)
 app.use('/forgotPassword',forgotPasswordRoutes)
 
 
-// app.use ((req,res)=>{
-//     res.sendFile(path.join(__dirname,`public/${req.url}`))
-// })
+app.use ((req,res)=>{
+    res.sendFile(path.join(__dirname,`public/${req.url}`))
+})
 sequelize.sync()
 .then(()=>{
-    app.listen(4000)
+    app.listen(3000)
 })
 .catch(err=>console.log(err));

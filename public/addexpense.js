@@ -10,7 +10,7 @@ function saveExpense(event){
     }
    
     const token=localStorage.getItem('token')
-    axios.post("http://35.154.166.226:4000/expense/addExpense",obj,{headers:{'Authorization':token}})
+    axios.post("http://35.154.166.226:3000/expense/addExpense",obj,{headers:{'Authorization':token}})
     .then(response=>{
         console.log(response)
         
@@ -28,7 +28,7 @@ function limitRows(event){
 }
 window.addEventListener('DOMContentLoaded',()=>{
     // const token=localStorage.getItem('token')
-    // axios.get("http://35.154.166.226:4000/expense/getExpense",{headers:{'Authorization':token}})
+    // axios.get("http://35.154.166.226:3000/expense/getExpense",{headers:{'Authorization':token}})
     // .then(response=>{
     //     console.log(response.user)
     //     if(response.user.ispremiumuser){
@@ -52,7 +52,7 @@ window.addEventListener('DOMContentLoaded',()=>{
 async function getProducts(page,rows){
     //console.log(page)
     const token=localStorage.getItem('token')
-    await axios.get(`http://35.154.166.226:4000/expense/getExpense?page=${page}&rows=${rows}`,{headers:{'Authorization':token}})
+    await axios.get(`http://35.154.166.226:3000/expense/getExpense?page=${page}&rows=${rows}`,{headers:{'Authorization':token}})
     .then((response)=>{
       //showPagination(response.data)
       
@@ -127,14 +127,14 @@ document.getElementById('premium').onclick=async function(e){
     try{
     
     const token=localStorage.getItem('token')
-    const response=await axios.get("http://35.154.166.226:4000/purchase/membership",{headers:{'Authorization':token}})
+    const response=await axios.get("http://35.154.166.226:3000/purchase/membership",{headers:{'Authorization':token}})
     
     
     var options={
         'key_id':response.key_id,
         'order_id':response.order.id,
         'handler':async function(response){
-            axios.post("http://35.154.166.226:4000/purchase/updateTransactionStatus",{
+            axios.post("http://35.154.166.226:3000/purchase/updateTransactionStatus",{
                 order_id:options.order_id,
                 payment_id:response.razorpay_payment_id
             },{headers:{'Authorization':token}})
@@ -181,7 +181,7 @@ const childNodeToBeDeleted=document.getElementById(id)
 if(childNodeToBeDeleted){
     const token=localStorage.getItem('token')
     
-    await axios.delete(`http://35.154.166.226:4000/expense/${id}`,{headers:{'Authorization':token}})
+    await axios.delete(`http://35.154.166.226:3000/expense/${id}`,{headers:{'Authorization':token}})
     .then((response)=>{
         if(response.status===400){
             throw new Error(response.message)
@@ -212,7 +212,7 @@ btn.value = "leader Board";
 
 btn.onclick=async()=>{
     const token=localStorage.getItem('token')
-    const leaderBoard= await axios.get("http://35.154.166.226:4000/purchase/leaderboard",{headers:{'Authorization':token}})
+    const leaderBoard= await axios.get("http://35.154.166.226:3000/purchase/leaderboard",{headers:{'Authorization':token}})
     
     
 
@@ -235,7 +235,7 @@ async function downloadFile(event){
     try{
     event.preventDefault()
     const token=localStorage.getItem('token')
-    await axios.get("http://35.154.166.226:4000/expense/download",{headers:{'Authorization':token}})
+    await axios.get("http://35.154.166.226:3000/expense/download",{headers:{'Authorization':token}})
     .then((response)=>{
         
         if(response.success){
@@ -258,7 +258,7 @@ const addDownloadDFiles = document.getElementById("addDownloadedFiles");
 async function addDownloadedFiles(userId) {
     const token=localStorage.getItem('token')
   const response = await axios.get(
-    "http://35.154.166.226:4000/expense/download",
+    "http://35.154.166.226:3000/expense/download",
     {
       headers: { Authorization: token },
     }

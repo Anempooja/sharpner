@@ -1,4 +1,4 @@
-const getExpenses=(req)=>{
+const getExpenses=(req,res,next)=>{
     return req.user.getExpenses()
 }
 

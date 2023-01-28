@@ -3,7 +3,7 @@ const User=require('../ExpenseAppModels/user');
 const bcrypt=require('bcrypt')
 const jwt=require('jsonwebtoken')
 function getAccessToken(id){
-    return jwt.sign({userId:id},'poojasecretkey')
+    return jwt.sign({userId:id},process.env.JWT_SECRET_KEY)
 }
 
 exports.signUp= async(req, res, next) => {
@@ -18,15 +18,15 @@ exports.signUp= async(req, res, next) => {
         }
       })
       const {name,email,password,ispremiumuser}=req.body
-      
+
       bcrypt.hash(password,10,async(err,hash)=>{
         console.log(err)
         const data=await User.create({name,email,password:hash,ispremiumuser})
-          
+
         return res.status(201).json({data})})
       }
-      
-      
+
+
       catch(err){
         res.status(500).json({error:err})
           console.log(err)
@@ -55,4 +55,3 @@ exports.login=async(req,res,next)=>{
 }
 catch(err){console.log(err)}
 };
-

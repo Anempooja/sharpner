@@ -6,24 +6,24 @@ const Order=require('../ExpenseAppModels/orders')
 const dotenv=require('dotenv')
 const User = require('../ExpenseAppModels/user')
 const Expense = require('../ExpenseAppModels/expense')
-const e = require('cors')
+
 const sequilize = require('../ExpenseAppUtil/database')
 dotenv.config()
 exports.membership=async(req,res,next)=>{
     try{
-        
+
         var rzp= new Razorpay({
-            key_id: 'rzp_test_77fx4M5GdoisqN',
-            key_secret: 'I64i5zwEr32UpmLsHegmdSCS'
+            key_id: "rzp_test_rdslJ4cskIcoyn",
+            key_secret: "nlIaC7MMMgjKSYoLqAF7VcNM"
         })
-       
+       //console.log(process.env.RAZORPAY_KEY,process.env.RAZORPAY_SECRET_KEY)
         const amount=25000;
         await rzp.orders.create({amount,currency:'INR'},(err,order)=>{
             if(err){
                 console.log(err)
                 throw new Error(err)
             }
-            
+
             req.user.createOrder({orderid:order.id,paymentStatus:'PENDING'}).then(()=>{
                 console.log('yyy')
                 return res.status(200).json({order,key_id:rzp.key_id})
@@ -40,7 +40,7 @@ exports.membership=async(req,res,next)=>{
 }
 exports.updateTransactionStatus=async(req,res)=>{
     try{
-        console.log('pooja')
+
         //console.log(req.body)
         const {payment_id,order_id}=req.body
         const order=await Order.findAll({where:{orderid:order_id}})
@@ -76,6 +76,5 @@ catch(err){
     console.log(err)
 }
 }
-        
-    
+
    

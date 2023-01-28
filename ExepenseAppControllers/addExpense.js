@@ -31,9 +31,9 @@ const download=async(req,res)=>{
         const {amount,description,category}=req.body;
 
 
-        const expense=await Expense.create({amount,description,category,userId:req.user.id})
+        const expenses=await Expense.create({amount,description,category,userId:req.user.id})
 
-        res.status(201).json({expense})
+        res.status(201).json({expenses})
     }
     catch(err){
         console.log(err)

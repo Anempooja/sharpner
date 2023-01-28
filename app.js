@@ -50,6 +50,6 @@ app.use('/forgotPassword',forgotPasswordRoutes)
 // })
 sequelize.sync()
 .then(()=>{
-    app.listen(process.env.PORT|| 4000)
+    app.listen(4000)
 })
 .catch(err=>console.log(err));

@@ -19,7 +19,7 @@ exports.forgotPassword = async (req, res) => {
         }).catch((err) => {
           throw new Error(err);
         });      
-        return res.json({resetlink:`<a href="https://35.154.166.226:4000/forgotPassword/resetPassword/${id}">Reset password</a>`,user:user});
+        return res.json({resetlink:`<a href="http://35.154.166.226:4000/forgotPassword/resetPassword/${id}">Reset password</a>`,user:user});
       } else {
         throw new Error("User doesnt exist");
       }

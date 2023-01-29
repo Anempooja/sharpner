@@ -36,7 +36,7 @@
         password
     }
     
-    await axios.post("https://35.154.166.226:3000/user/login",obj)
+    await axios.post("http://35.154.166.226:3000/user/login",obj)
     .then((response)=>{   
         console.log(response)
         document.getElementById('email').value=''

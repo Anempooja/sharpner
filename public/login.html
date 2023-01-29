@@ -44,7 +44,7 @@
         window.alert(response.message)
         localStorage.setItem('token',response.token)
         //onclick(open("file:///C:/Users/HP%203500TX/Desktop/firstgit/addExpense.html"))
-        onclick(window.location.href = "../public/addExpense.html");
+        onclick(window.location.href = "./addExpense.html");
         }
     )
     .catch(err=>{console.log(JSON.stringify(err))})

@@ -157,7 +157,7 @@ document.getElementById('premium').onclick=async function(e){
 
 }
 function showUserOnScreen(user){
-  console.log('showscreen',user.id,user.amount,user.description,user.category)
+  
   const parentNode=document.getElementById('listOfExpenses')
   const childHTML=`<li id=${user.id}> ${user.amount}-${user.description}-${user.category}
       <button onclick="deleteUser('${user.id}')">DeleteUser</button>
@@ -168,6 +168,7 @@ function showUserOnScreen(user){
       document.getElementById('amount').value=''
       document.getElementById('description').value=''
       document.getElementById('category').value=''  
+
 }
 function editUser(id,amount,description,category){
     
@@ -180,7 +181,7 @@ async function deleteUser(id){
 const childNodeToBeDeleted=document.getElementById(id)
 if(childNodeToBeDeleted){
     const token=localStorage.getItem('token')
-    
+    console.log(id)
     await axios.delete(`http://35.154.166.226:3000/expense/${id}`,{headers:{'Authorization':token}})
     .then((response)=>{
         if(response.status===400){

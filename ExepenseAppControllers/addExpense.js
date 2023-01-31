@@ -80,10 +80,12 @@ const deleteExpense=async(req,res,next)=>{try{
 
     const expenseId = req.params.expenseId;
     console.log(expenseId)
-    await Expense.destroy({where:{id:expenseId}})
-    
+    await Expense.destroy({where:{id:expenseId,userId:req.user.id}})
     .then((response)=>{
-        if(response===1){
+        if(response===0){
+            res.status(400).json({message:'expense can not be deleted as it belongs to other'})
+        }
+        else if(response===1){
             res.status(200).json({message:'deleted successfully'})
         }
     })

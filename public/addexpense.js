@@ -60,7 +60,7 @@ async function getProducts(page,rows){
         showUserOnScreen(response.expenses[i])}
 showPagination(response.data)
 addDownloadedFiles(response.expenses.userId)
-      console.log(response)
+      console.log('response',response)
         
     })
 }

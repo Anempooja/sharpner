@@ -35,19 +35,24 @@ exports.login=async(req,res,next)=>{
  try{
   const {email,password}=req.body;
     await User.findAll({where:{email}})
+
     .then(users=>{
+        
       if(users.length>0){
         bcrypt.compare(password,users[0].password,(err,result)=>{
           if(err){
             throw new Error('user not found')
           }
           if(result){
-            return res.status(200).json({sucess:true,message:'user logged in successfuly ',token:getAccessToken(users[0].id)})
+            return res.status(200).json({success:true,message:'user logged in successfuly ',token:getAccessToken(users[0].id)})
           }
           else{
-            return res.status(404).json({sucess:false,message:'password is incorrect' })
+            return res.status(401).json({success:false,message:'password is incorrect' })
           }
         })  
+  }
+  else{
+    return res.status(404).json({success:false,message:"user not found"})
   }
 })
   .catch(err=>{console.log(err)})

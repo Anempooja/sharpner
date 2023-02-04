@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<body>
+<link rel="stylesheet" href="project.css">
+
+    <form onsubmit="login(event)">
+       
+        <div class="box">
+        <input id="email" name="email" type="email" placeholder="Email.." required/><br>
+        <input id="password" name="password" type="password" placeholder="password.." required/><br>
+
+        <button id="login">Login</button>
+    </div>
+    <a href="./signupchatApp.html"> New user-signup</a>
+</form>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.2.0/axios.min.js"></script>
+</body>
+</html>
+<script>
+async function login(event){
+    event.preventDefault()
+    const email=document.getElementById('email').value
+    const password=document.getElementById('password').value
+    const object={
+        email,
+        password
+    }
+    await axios.post("http://localhost:3000/user/login",object)
+    .then((response)=>{
+        document.getElementById('email').value=""
+        document.getElementById('password').value=""
+        window.alert("login success")
+        onclick(window.location.href='/chat.html')
+    })
+    .catch((err)=>{
+        console.log(err)
+    })
+}
+</script>

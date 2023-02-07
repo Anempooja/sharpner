@@ -3,7 +3,7 @@ const User=require('../chatappModels/user');
 const bcrypt=require('bcrypt')
 const jwt=require('jsonwebtoken')
 function getAccessToken(id){
-    return jwt.sign({userId:id},process.env.JWT_SECRET_KEY)
+    return jwt.sign({id},'poojasecretkey')
 }
 
 exports.signUp= async(req, res, next) => {
@@ -39,6 +39,7 @@ exports.login=async(req,res,next)=>{
     .then(users=>{
         
       if(users.length>0){
+        console.log(users[0].id)
         bcrypt.compare(password,users[0].password,(err,result)=>{
           if(err){
             throw new Error('user not found')

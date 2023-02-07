@@ -1,6 +1,6 @@
 const Sequelize=require('sequelize');
 const sequelize=require('../chatappUtil/database');
-const Chat=sequelize.define('chat',{
+const User=sequelize.define('user',{
 id:{
     type:Sequelize.INTEGER,
     autoIncrement: true,
@@ -20,4 +20,4 @@ phonenumber:{
 }
 
 })
-module.exports=Chat
+module.exports=User

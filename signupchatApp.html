@@ -9,7 +9,7 @@
 <body>
 <link rel="stylesheet" href="project.css">
 
-    <form onsubmit="savechat(event)">
+    <form onsubmit="saveUser(event)">
        
         <div class="box">
         
@@ -26,7 +26,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.2.0/axios.min.js"></script>
 </body>
 <script>
-    function savechat(event){
+    function saveUser(event){
     event.preventDefault();
     const name=event.target.name.value;
     const email=event.target.email.value;   
@@ -40,14 +40,16 @@
         password
         
     }
-    console.log(obj)
+   
     axios.post("http://localhost:3000/user/signup",obj)
     .then((response)=>{
+        //const mydate=new Date("2021-02-04T08:52:11.000Z");
         console.log(response)
         document.getElementById('name').value=''
         document.getElementById('email').value=''
         document.getElementById('password').value=''
         document.getElementById('number').value=''
+        window.location.href="./loginChatapp.html"
         
     })
     .catch(err=>console.log(err))

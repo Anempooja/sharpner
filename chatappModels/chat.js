@@ -11,5 +11,8 @@ message:{
     type:Sequelize.STRING,
     allowNull:false
 },
+name:{
+    type:Sequelize.STRING
+}
 })
 module.exports=Chat

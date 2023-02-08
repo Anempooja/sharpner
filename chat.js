@@ -1,3 +1,4 @@
+const chatArray=[]
 
 async function savechat(event){try{
     event.preventDefault();
@@ -14,14 +15,24 @@ async function savechat(event){try{
     }
     window.addEventListener('DOMContentLoaded',async()=>{
         try{
+            const id=-1
             
-            await axios.get(`http://localhost:3000/chat/display`)
+            await axios.get(`http://localhost:3000/chat/display/${id}`)
             .then((response)=>{
                 const chats=response.chats
-                //const parentNode=document.getElementById('ul')
+                const chatArray=[]
+                if(chatArray){
+                for (var i=0;i<10;i++){
+                    chatArray[i]=chats[i]
+                    console.log(chatArray)
+                }}
+                
+               localStorage.setItem('chat',`${chatArray}`)
+                console.log(chatArray)
+                const parentNode=document.getElementById('ul')
             
                 chats.forEach((chat)=>{
-                    const parentNode=document.getElementById('ul')
+                    
                        const  childHTML=`<li>${chat.name} : ${chat.message}</li>`
                         parentNode.innerHTML+=childHTML
                 

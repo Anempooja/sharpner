@@ -7,12 +7,12 @@
     <title>Chat box</title>
 </head>
 <body>
-<link rel="stylesheet" href="project.css">
+
 
     <form id="form" onsubmit="savechat(event)">
         <input type="text" id="message" placeholder="type message" required/>
        <button>submit</button>
-        <div class="box">
+        <div id="div" class="box">
             <ul id="ul"></ul>
             
         
@@ -24,35 +24,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.2.0/axios.min.js"></script>
 </body>
 </html>
+<script src="chat.js"></script>
 <script>
-    async function savechat(event){try{
-        event.preventDefault();
-        const message=event.target.message.value;
-        const token=localStorage.getItem('token')
-        await axios.get(`http://localhost:3000/chat/message/${message}`,{headers:{'Authorization':token}})
-        .then((respose)=>{
-            document.getElementById('message').value=''
-            console.log(respose)
-        })
-        .catch((err)=>console.log(err))}
-        catch(err){console.log(err)}
-        }
-        window.addEventListener('DOMContentLoaded',async()=>{
-            try{
-
-                await axios.get(`http://localhost:3000/chat/display`)
-                .then((respose)=>{
-                    const chats=respose.chats
-                    const parentNode=document.getElementById('ul')
-                    for(var i=0;i<=chats.length;i++){
-                        const childHTML=`<li>${chats[i].name} : ${chats[i].message}</li>`
-                        parentNode.innerHTML=parentNode.innerHTML+childHTML
-                    }
-
-                    console.log('chats',respose)
-                })
-                .catch((err)=>console.log(err))
-            }
-            catch(err){console.log(err)}
-        })
+    setInterval(() => {
+    window.location.href="chat.html"
+    }, 5000);
 </script>

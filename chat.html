@@ -7,7 +7,9 @@
     <title>Chat box</title>
 </head>
 <body>
+<div id="groupnames">
 
+</div>
 
 <button id="createGroup" onclick="showCreateGroupForm(event)">create group</button>
 
@@ -16,6 +18,10 @@
        <button>submit</button>
             <ul id="ul"></ul>
 </form>
+<form onsubmit="sendImage(event)" id="fileBox">
+    <input type="file" name="file" id="file" />
+    <button id="send">SEND IMAGE</button>
+  </form>
 <div id="groups" >
    
 </div>

@@ -9,17 +9,18 @@
 <body>
 
 
+<button id="createGroup" onclick="showCreateGroupForm(event)">create group</button>
+
     <form id="form" onsubmit="savechat(event)">
         <input type="text" id="message" placeholder="type message" required/>
        <button>submit</button>
-        <div id="div" class="box">
             <ul id="ul"></ul>
-            
-        
-        
-       
-    </div>
 </form>
+<div id="groups" >
+   
+</div>
+
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.2.0/axios.min.js"></script>
 </body>

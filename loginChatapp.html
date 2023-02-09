@@ -40,13 +40,17 @@
         password
     }
     
+    
     await axios.post("http://localhost:3000/user/login",obj)
     .then((response)=>{   if(response.success){
-        
+        console.log('user',response)
+        localStorage.setItem('userName',response.user.name)
+        localStorage.setItem('userId',response.user.id)
         document.getElementById('email').value=''
     document.getElementById('password').value=''
         window.alert(response.message)
-        localStorage.setItem('token',response.token)
+        
+        localStorage.setItem('token',`${response.token}`)
         //onclick(open("file:///C:/Users/HP%203500TX/Desktop/firstgit/addExpense.html"))
         onclick(window.location.href = "./chat.html");
     }

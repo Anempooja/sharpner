@@ -45,7 +45,7 @@ exports.login=async(req,res,next)=>{
             throw new Error('user not found')
           }
           if(result){
-            return res.status(200).json({success:true,message:'user logged in successfuly ',token:getAccessToken(users[0].id)})
+            return res.status(200).json({success:true,message:'user logged in successfuly ',token:getAccessToken(users[0].id),user:users[0]})
           }
           else{
             return res.status(401).json({success:false,message:'password is incorrect' })
@@ -61,3 +61,10 @@ exports.login=async(req,res,next)=>{
 }
 catch(err){console.log(err)}
 };
+exports.users=async(req,res,next)=>{try{
+ const users=await User.findAll()
+// console.log(users)
+res.status(200).json({users:users})
+}
+catch(err){console.log(err)}
+}

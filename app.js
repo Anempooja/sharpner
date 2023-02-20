@@ -1,59 +1,80 @@
+const path = require('path');
+
 const express = require('express');
-var CronJob = require('cron').CronJob;
-var sequelize=require('./chatappUtil/database')
 const bodyParser = require('body-parser');
 
-var cors = require('cors')
-const Group=require('./chatappModels/group')
-const User=require('./chatappModels/user')
-const Chat=require('./chatappModels/chat')
-const userGroup=require('./chatappModels/userGroup') 
-//const ArchievedChat=require('../chatappModels/archievedChats')
+// const errorController = require('./controllers/error');
+// const sequelize = require('./util/database');
+// const Product = require('./models/product');
+// const User = require('./models/user');
+// const Cart = require('./models/cart');
+// const CartItem = require('./models/cart-item');
+// const Order = require('./models/order');
+// const OrderItem = require('./models/order-item');
+const mongoconnect=require('./util/database').mongoConnect;
 
-var signupRouter=require('./chatappRoutes/signup')
-var chatRouter=require('./chatappRoutes/chat')
-var groupRouter=require('./chatappRoutes/group');
-const ArchievedChat = require('./chatappModels/archievedChats');
+const app = express();
 
-var app=express()
+app.set('view engine', 'ejs');
+app.set('views', 'views');
 
-app.use(cors())
-app.use(bodyParser.json({ extended: false }));
-app.use('/user',signupRouter)
-app.use('/chat',chatRouter)
-app.use('/group',groupRouter)
-User.hasMany(Chat)
-Chat.belongsTo(User)
+ const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
 
-Group.hasMany(Chat)
-Chat.belongsTo(Group)
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, 'public')));
 
-User.hasMany(ArchievedChat)
-ArchievedChat.belongsTo(User)
+// app.use((req, res, next) => {
+//   User.findById(1)
+//     .then(user => {
+//       req.user = user;
+//       next();
+//     })
+//     .catch(err => console.log(err));
+// });
 
-Group.hasMany(ArchievedChat)
-ArchievedChat.belongsTo(Group)
+app.use('/admin', adminRoutes);
+app.use(shopRoutes);
 
-Group.belongsToMany(User,{through:userGroup})
-User.belongsToMany(Group,{through:userGroup})
+// app.use(errorController.get404);
 
-var job = new CronJob(
-	'* * 3 * * *',
-	async function() {
-		// console.log('You will see this message every second');
-        const chats=await Chat.findAll()
-        chats.forEach(chat => {
-            ArchievedChat.create({message:chat.message,userId:chat.userId,name:chat.name,groupId:chat.groupId,createdAt:chat.createdAt,updatedAt:chat.updatedAt})
-            Chat.destroy({where:{id:chat.id}})
-        });
-        
-	},
-	null,
-	true,
-	'Asia/Kolkata'
-);
-sequelize.sync()
-.then(()=>{
-    app.listen(3000)
+// Product.belongsTo(User, { constraints: true, onDelete: 'CASCADE' });
+// User.hasMany(Product);
+// User.hasOne(Cart);
+// Cart.belongsTo(User);
+// Cart.belongsToMany(Product, { through: CartItem });
+// Product.belongsToMany(Cart, { through: CartItem });
+// Order.belongsTo(User);
+// User.hasMany(Order);
+// Order.belongsToMany(Product, { through: OrderItem });
+
+// sequelize
+//   // .sync({ force: true })
+//   .sync()
+//   .then(result => {
+//     return User.findById(1);
+//     // console.log(result);
+//   })
+//   .then(user => {
+//     if (!user) {
+//       return User.create({ name: 'Max', email: 'test@test.com' });
+//     }
+//     return user;
+//   })
+//   .then(user => {
+//     // console.log(user);
+//     return user.createCart();
+//   })
+//   .then(cart => {
+//     app.listen(3000);
+//   })
+//   .catch(err => {
+//     console.log(err);
+//   });
+
+
+
+mongoconnect(()=>{
+ 
+  app.listen(3000)
 })
-.catch(err=>console.log(err));

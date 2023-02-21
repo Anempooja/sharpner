@@ -3,6 +3,7 @@ const User=require('../models/user')
 
 exports.getProducts = (req, res, next) => {
   Product.find()
+  // .populate('userId')
     .then(products => {
       res.render('shop/product-list', {
         prods: products,

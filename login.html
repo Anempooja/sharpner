@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+</head>
+<link rel="stylesheet" href="project.css">
+<body id="loginBody">
+    <form id="loginForm" onsubmit="loginUser(event)">
+        <label>Email</label>
+        <input id="email" name="email" type="email" required/> 
+        <label>password</label>
+        <input id="password" name="password" type="password" required/>
+        <button id="loginButton">login</button></form><br>
+        <button id="forgotPassword" onclick="forgotpassword(event)">forgot Password?</button>
+        
+        <a id="resetlink" href="C:\Users\HP 3500TX\Desktop\sharpner\public\signup.html">New User -signup</a>
+    </form>
+   
+   
+    
+</body>
+</html>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.2.0/axios.min.js"></script>
+<script>
+    async function loginUser(event){
+        event.preventDefault()
+    const email=event.target.email.value;
+    const password=event.target.password.value;
+    const obj={
+        email,
+        password
+    }
+    
+    await axios.post("http://localhost:3000/user/login",obj)
+    .then((response)=>{   
+        
+        document.getElementById('email').value=''
+    document.getElementById('password').value=''
+        window.alert(response.message)
+        localStorage.setItem('token',response.token)
+        //onclick(open("file:///C:/Users/HP%203500TX/Desktop/firstgit/addExpense.html"))
+        onclick(window.location.href = "./addExpense.html");
+        
+        }
+    )
+    .catch(err=>{console.log(JSON.stringify(err))})
+    }
+    function forgotpassword(event){
+    
+    window.location.href="./forgotPassword.html"
+
+}
+</script>

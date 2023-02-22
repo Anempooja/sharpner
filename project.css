@@ -1,0 +1,122 @@
+#signupBody,
+#loginBody{
+  padding-top: 50px;
+  align-self: auto;
+    background-size: cover ;
+    background-image: url(image2.png); 
+    
+    background-repeat: no-repeat; 
+    font-style: italic;
+    
+}
+
+
+#addExpenseBody{
+    padding-top: 50px;
+  align-self: auto;
+    background-size: cover ;
+    background-image: url(image.jpg); 
+    padding-left: 35%;
+    background-repeat: no-repeat; 
+    
+}
+h2{
+  width:auto;
+  height:auto;
+  font-style: italic;
+  margin-left:6rem ;
+  color:black;
+}
+.login{
+  
+  width:300px;
+ height:350px;
+ background-size: auto;
+ background: linear-gradient(grey,lightseagreen );
+ opacity:90%;
+ 
+
+ border: 2px solid aqua;
+ background-color: white;
+ border-radius: 10%;
+ 
+}
+#loginForm{
+    box-align: center;
+    box-sizing: content-box;
+ 
+   border-right-style: solid ;
+   border-left-style: solid;
+    padding :20px;
+  background-color: rgb(0,0,0,0.3);
+   border-radius: auto;
+   
+}
+#loginButton,
+#signup,#forgotPassword{
+    
+    color:brown;
+    border-radius: 5px;
+    border-color:lightsalmon;
+    padding: 10px 20px;
+  text-align: center;
+    
+}
+input {
+    margin-bottom: 1.2rem;
+    height: 25px;
+    border: none;
+    border-bottom: 2px solid white;
+    padding: 2px;
+    width:auto;
+    background-color: rgb(0,0,0,0.01);
+  }
+#loginButton:hover,
+#signup:hover,
+#forgotPassword:hover{
+    color: rgb(255, 255, 255);
+    cursor: pointer;
+    background-color: lightseagreen;
+  }
+input:hover{
+    
+    background-color: rgb(255, 255, 255,0.5);
+}
+::placeholder{
+    color: ivory;
+    font-style: italic;
+}
+
+.projectDetails{
+  padding :20px;
+background-color: rgb(0,0,0,0.3);
+
+}
+#addproject{
+  width:50%;
+    
+   margin-left: 25rem;
+    color:brown;
+    border-radius: 5px;
+    border-color:lightsalmon;
+    padding: 10px 20px;
+  text-align: center;
+
+}
+  .projects{
+    color:azure;
+    font-size: larger;
+    font-style: italic;
+  }
+#addExpenseform{
+  box-align: center;
+  box-sizing: content-box;
+width:500px;
+height:300px;
+ border-right-style: solid ;
+ border-left-style: solid;
+  padding :20px;
+ padding-left: 40px;
+background-color: rgba(0,0, 0, 0.4);
+ border-radius: 10%;
+}

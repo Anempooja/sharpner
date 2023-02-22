@@ -1,10 +1,25 @@
-const dotenv=require('dotenv')
-dotenv.config()
-const Sequilize=require('sequelize')
-console.log(process.env.DB_NAME,process.env.DB_PASSWORD,process.env.DB_HOST,process.env.DB_USERNAME)
-const sequilize=new Sequilize(process.env.DB_NAME,process.env.DB_USERNAME,process.env.DB_PASSWORD,{
-    dialect:'mysql',
-    host:process.env.DB_HOST
-})
+const mongodb=require('mongodb')
+const mongoClient=mongodb.MongoClient
+let _db;
 
-module.exports=sequilize
+const mongoconnect=callback=>{
+    mongoClient.connect('mongodb+srv://anempooja:anem123@cluster0.8zv81n8.mongodb.net/shop?retryWrites=true&w=majority')
+    .then(client=>{
+        console.log('connected')
+        _db=client.db
+        callback()
+    })
+    .catch(err=>{console.log(err)})
+}
+
+const getdb=()=>{
+    if(_db){
+        return _db
+    }
+    else{
+        throw 'database not found'
+    }
+}
+
+exports.mongoconnect=mongoconnect
+exports.getdb=getdb

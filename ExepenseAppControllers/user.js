@@ -8,25 +8,30 @@ function getAccessToken(id){
 
 exports.signUp= async(req, res, next) => {
     try{
-      User.findAll()
+      User.find()
       .then(users=>{
-        for(var i=0;i<users.length;i++){
-          if(users[i].name==req.body.email){
-            console.error('user already exists')
-            return
+        if(users){
+          for(var i=0;i<users.length;i++){
+            if(users[i].name==req.body.email){
+              console.error('user already exists')
+              return
+            }
           }
         }
+        
       })
       const {name,email,password,ispremiumuser}=req.body
 
       bcrypt.hash(password,10,async(err,hash)=>{
-        console.log(err)
-        const data=await User.create({name,email,password:hash,ispremiumuser})
+        if(err){
+          throw Error('bcrypt error')
+        }
+        
+        const data= new User({name:name,email:email,password:hash,ispremiumuser:ispremiumuser})
+        data.save()
 
         return res.status(201).json({data})})
       }
-
-
       catch(err){
         res.status(500).json({error:err})
           console.log(err)
@@ -34,7 +39,7 @@ exports.signUp= async(req, res, next) => {
 exports.login=async(req,res,next)=>{
  try{
   const {email,password}=req.body;
-    await User.findAll({where:{email}})
+    await User.find({email:email})
     .then(users=>{
       if(users.length>0){
         bcrypt.compare(password,users[0].password,(err,result)=>{

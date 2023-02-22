@@ -3,18 +3,16 @@ const Razorpay=require('razorpay')
 
 const Order=require('../ExpenseAppModels/orders')
 
-const dotenv=require('dotenv')
+
 const User = require('../ExpenseAppModels/user')
 const Expense = require('../ExpenseAppModels/expense')
 
-const sequilize = require('../ExpenseAppUtil/database')
-dotenv.config()
 exports.membership=async(req,res,next)=>{
     try{
 
         var rzp= new Razorpay({
-            key_id: "rzp_test_rdslJ4cskIcoyn",
-            key_secret: "nlIaC7MMMgjKSYoLqAF7VcNM"
+            key_id:'rzp_test_QAEqBWqdhtoBaX',
+            key_secret: "YfdeSMfWAsHyajYr5oVVaW3f"
         })
        //console.log(process.env.RAZORPAY_KEY,process.env.RAZORPAY_SECRET_KEY)
         const amount=25000;
@@ -24,8 +22,10 @@ exports.membership=async(req,res,next)=>{
                 throw new Error(err)
             }
 
-            req.user.createOrder({orderid:order.id,paymentStatus:'PENDING'}).then(()=>{
-                console.log('yyy')
+           const orders=new Order({paymentid:null,orderid:order.id,paymentStatus:'PENDING',userId:req.user.id})
+           orders.save()
+           .then(()=>{
+               
                 return res.status(200).json({order,key_id:rzp.key_id})
             })
             .catch(err=>{
@@ -41,16 +41,19 @@ exports.membership=async(req,res,next)=>{
 exports.updateTransactionStatus=async(req,res)=>{
     try{
 
-        //console.log(req.body)
+        const user=User.findOne({_id:req.user.id})
         const {payment_id,order_id}=req.body
-        const order=await Order.findAll({where:{orderid:order_id}})
-        console.log(order)
-            const promise1=order[0].update({paymentid:payment_id,paymentStatus:'SUCCESSFUL'})
-            const promise2=req.user.update({ispremiumuser:true})
-                promise.all(promise1,promise2).then(()=>{
+        const order=await Order.findOne({orderid:order_id})
+        
+           order.updateOne({paymentid:payment_id,paymentStatus:'SUCCESSFUL'})
+
+           user.updateOne({ispremiumuser:true})
+        .then(()=>{
                     return res.status(202).json({success:true,message:'Transaction sucessful'})
                 })   
-                .catch(err=>{throw new Error(err)})
+                .catch(err=>{
+                    console.log(err)
+                    throw new Error(err)})
         }
         catch(err){
             res.status(400).json({error:err})
@@ -59,18 +62,25 @@ exports.updateTransactionStatus=async(req,res)=>{
 exports.leaderboard=async(req,res,next)=>{
 
 try{
-    const userLeaderboardDetails=await User.findAll({
-        attributes:['id','name',[sequilize.fn('sum',sequilize.col('expenses.amount')),'total_cost']],
-        include:[
-            {
-                model:Expense,
-                attributes:[]
-            }
-        ],
-        group:['user.id'],
-        order:[['total_cost','DESC']]
+    const users=(await User.find().select('name'))
+    const userLeaderboardDetails=[]
+    const promise1=users.map(async(user)=>{
+        
+        const expenses=await Expense.find({userId:user.id}).select('amount')
+        
+        let sum=0
+        for(var i=0;i<expenses.length;i++){
+            sum+=expenses[i].amount
+        }
+        
+        userLeaderboardDetails.push(sum) 
+       
     })
-    res.status(200).json(userLeaderboardDetails)
+    Promise.all(promise1).then(()=>{
+         
+    res.status(200).json({users:users,userLeaderboardDetails})
+    })
+   
 }
 catch(err){
     console.log(err)

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Expense</title>
+</head>
+<link rel="stylesheet" href="project.css">
+<body id="addExpenseBody">
+    <form id="addExpenseform" onsubmit="saveExpense(event)">
+        <label >Amount</label>
+        <input id="amount" name="amount" type="number" required/><br>
+        <label >description</label>
+        <input id="description" name="description" type="text" required/><br>
+        <label >category</label>
+        <input id="category" name="category" type="text" required/><br>
+        <button id="addExpense">Add Expense</button>
+        <button id="showTable" onclick="downloadFile(event)">Download file</button>
+        <select name="rows" id="rows" onchange="limitRows(event)">
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="25">25</option>
+            <option value="20">50</option>
+          </select>
+    </form><br>
+    </form>
+    <button id="premium">Buy Premium</button>
+    
+    <ul id='listOfExpenses'></ul>
+    <ul id="leaderboard"></ul>
+    <ul id="leaderBoardEle"></ul>
+
+
+    <div id="addDownloadedFiles"></div>
+   
+    <div id="pagination"></div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.2.0/axios.min.js"></script>
+    
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script scr="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script src="addexpense.js"></script>
+</body>
+</html>

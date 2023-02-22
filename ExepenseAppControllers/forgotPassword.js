@@ -5,33 +5,35 @@ const User=require('../ExpenseAppModels/user')
 exports.forgotPassword = async (req, res) => {
     try {
       const email = req.params.emailId
-      const user = await User.findAll({ where: { email } });
-      
-     
-      
+      const user = await User.find({ email:  email  });
       if(user){
         
         const id = uuid.v4();
-        forgotPasswordRequests.create({
+        const forgotPasswordRequest=new forgotPasswordRequests({
           isActive: true,
-          id: id,
           userId: user[0].id
+        })
+        forgotPasswordRequest.save()
+        .then((result)=>{
+          console.log(result)
         }).catch((err) => {
+          console.log(err)
           throw new Error(err);
         });      
-        return res.json({resetlink:`<a href="http://35.154.166.226:3000/forgotPassword/resetPassword/${id}">Reset password</a>`,user:user});
+        return res.json({resetlink:`<a href="http://localhost:3000/forgotPassword/resetPassword/${id}">Reset password</a>`,user:user});
       } else {
         throw new Error("User doesnt exist");
       }
     } catch (err) {
+      console.log(err)
       return res.json({ message: err,sucess: false });
     }
   };
   exports.resetPassword = (req, res) => {
     const id = req.params.uuid;
-    forgotPasswordRequests.findOne({ where: { id } }).then((forgotpassword) => {
+    forgotPasswordRequests.findOne({ id: id  }).then((forgotpassword) => {
       if (forgotpassword) {
-        forgotpassword.update({ active: false });
+        forgotpassword.updateOne({ isActive: false });
         res.status(200).send(`<html>
                                   
                                       <script>
@@ -56,11 +58,11 @@ exports.forgotPassword = async (req, res) => {
       const { newpassword } = req.query;
       const resetpasswordid = req.params.id;
       //console.log(resetpasswordid)
-      forgotPasswordRequests.findAll({ where: { id: resetpasswordid } }).then(
-        (resetpasswordrequest) => {
+      forgotPasswordRequests.find({ id: resetpasswordid })
+      .then((resetpasswordrequest) => {
           console.log(resetpasswordrequest)
-          User.findAll({ where: { id: resetpasswordrequest[0].userId } }).then(
-            (user) => {
+          User.find({ id: resetpasswordrequest[0].userId } )
+          .then((user) => {
               console.log(user)
               if (user) {
                 const saltRounds = 10;
@@ -74,7 +76,7 @@ exports.forgotPassword = async (req, res) => {
                       console.log(err);
                       throw new Error(err);
                     }
-                    user[0].update({ password: hash }).then(() => {
+                    user[0].updateOne({ password: hash }).then(() => {
                       res.status(201).json({ message: "Successfuly update the new password" });
                     });
                   });
@@ -89,6 +91,7 @@ exports.forgotPassword = async (req, res) => {
         }
       );
     } catch (error) {
+      console.log(error)
       return res.status(403).json({ error, success: false });
     }
   };

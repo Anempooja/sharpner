@@ -1,20 +1,20 @@
 const Expense=require('../ExpenseAppModels/expense');
 const AWS=require('aws-sdk')
 
-var limit_items=5
+var limit=5
 
- const UserServices=require('../ExpenseServices/userServices')
+ 
  const s3Services=require('../ExpenseServices/s3Services')
 
-const download=async(req,res)=>{
+exports.download=async(req,res)=>{
     try{
-    const expenses=await UserServices.getExpenses(req)
-    console.log(expenses)
+    const expenses=await Expense.find({userId:req.user.id})
+   
     const stringifiedExpenses=JSON.stringify(expenses)
     const filename=`${req.user.id}/${new Date()}Expense.txt`
     const fileURL=await s3Services.uploadToS3(stringifiedExpenses,filename)
 
-    return res.status(200).json({fileURL,success:true})
+    return res.status(200).json({fileURL,date:req.user.createdAt,success:true})
     }
     catch(err){
         console.log(err)
@@ -22,7 +22,7 @@ const download=async(req,res)=>{
     }
 }
 
- const addExpense=async(req,res,next)=>{
+exports.addExpense=async(req,res,next)=>{
     try{
 
         if(!req.body.amount||!req.body.description||!req.body.category){
@@ -31,7 +31,8 @@ const download=async(req,res)=>{
         const {amount,description,category}=req.body;
 
 
-        const expenses=await Expense.create({amount,description,category,userId:req.user.id})
+        const expenses=new Expense({amount:amount,description:description,category:category,userId:req.user._id})
+        expenses.save()
 
         res.status(201).json({expenses})
     }
@@ -39,54 +40,55 @@ const download=async(req,res)=>{
         console.log(err)
     }
 }
-const getExpense=async(req,res,next)=>{
+exports.getExpense=async(req,res,next)=>{
     try{
-        //var limit_items=req.query.rows
-        console.log(req.query.rows)
+     
         const page=req.query.page
-        console.log(page)
-        const totalExpenses=await Expense.count({where:{userId:req.user.id}})
-        console.log(totalExpenses)
-        const expenses=await req.user.getExpenses({
-            offset: (page - 1) *limit_items,
-            limit: limit_items
-        })
-
+      
+        const totalExpenses=await Expense.count({userId:req.user.id})
+        console.log(req.user.id)
+        const expenses=await Expense.find({userId:req.user.id})
+                .limit(limit * 1)
+                .skip((page - 1) * limit)
+                .exec()
+     
+        
         res.status(200).json({
+            user:req.user,
             expenses,
             success: true,
             data: {
               currentPage: +page,
-              hasNextPage: totalExpenses > page * limit_items,
+              hasNextPage: totalExpenses > page * limit,
               hasPreviousPage: page > 1,
               nextPage: +page + 1,
               previousPage: +page - 1,
-              lastPage: Math.ceil(totalExpenses / limit_items),
+              lastPage: Math.ceil(totalExpenses / limit),
             },
           });
-        // const expenses=await Expense.findAll({where:{userId:req.user.id}})
-        // return res.status(200).json({Expenses:expenses,user:req.user})
     }
     catch(err){
         console.log(err)
     }
 }
 
-const deleteExpense=async(req,res,next)=>{try{
+exports.deleteexpense=async(req,res,next)=>{try{
+    
     if(!req.params.expenseId){
         console.log('expense not found')
         res.status(500).json({err:'not found'})      
     }
 
     const expenseId = req.params.expenseId;
-    console.log(expenseId)
-    await Expense.destroy({where:{id:expenseId,userId:req.user.id}})
+    
+    await Expense.deleteOne({_id:expenseId})
     .then((response)=>{
-        if(response===0){
-            res.status(400).json({message:'expense can not be deleted as it belongs to other'})
+        console.log(response,'deleteeeeeeeeeeeeeeee')
+        if(response.deletedCount===0){
+            res.json({message:'expense can not be deleted as it belongs to other',status:400})
         }
-        else if(response===1){
-            res.status(200).json({message:'deleted successfully'})
+        else if(response.deletedCount===1){
+            res.json({message:'deleted successfully',status:200})
         }
     })
 
@@ -95,10 +97,5 @@ const deleteExpense=async(req,res,next)=>{try{
     catch(err){console.log(err)
 
   }}
-  module.exports={
-    addExpense,
-    getExpense,
-    deleteExpense,
-    download
-  }
+
 
